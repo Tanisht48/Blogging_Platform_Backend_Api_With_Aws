@@ -23,6 +23,7 @@ public class Blogger {
     @NotEmpty
     private String bloggerName;
     @NotEmpty
+    @Column(unique = true)
     private String bloggerHandle;
     private String bloggerBio;
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")

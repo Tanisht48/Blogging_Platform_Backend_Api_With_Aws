@@ -1,6 +1,7 @@
 package com.Geekster.Blogging_Platform_Backend_Api.Service;
 
 import com.Geekster.Blogging_Platform_Backend_Api.Model.AuthenticationToken;
+import com.Geekster.Blogging_Platform_Backend_Api.Model.Blogger;
 import com.Geekster.Blogging_Platform_Backend_Api.Repository.IAuthenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,13 @@ public class AuthenticationService {
         String tokenConnectedEmail = authToken.getBlogger().getBloggerEmail();
 
         return tokenConnectedEmail.equals(email);
+    }
+
+    public AuthenticationToken findFirstByBlogger(Blogger blogger) {
+        return authenticationRepo.findFirstByBlogger(blogger);
+    }
+
+    public void removeToken(AuthenticationToken token) {
+        authenticationRepo.delete(token);
     }
 }

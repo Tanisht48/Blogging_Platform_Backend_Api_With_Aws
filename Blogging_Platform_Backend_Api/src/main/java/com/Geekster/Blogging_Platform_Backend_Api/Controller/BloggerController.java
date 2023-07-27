@@ -2,17 +2,14 @@ package com.Geekster.Blogging_Platform_Backend_Api.Controller;
 
 import com.Geekster.Blogging_Platform_Backend_Api.Model.Blog;
 import com.Geekster.Blogging_Platform_Backend_Api.Model.Blogger;
-import com.Geekster.Blogging_Platform_Backend_Api.Model.dto.BlogInput;
-import com.Geekster.Blogging_Platform_Backend_Api.Model.dto.SignInInput;
-import com.Geekster.Blogging_Platform_Backend_Api.Model.dto.SignUpOutput;
+import com.Geekster.Blogging_Platform_Backend_Api.Model.dto.*;
 import com.Geekster.Blogging_Platform_Backend_Api.Service.AuthenticationService;
 import com.Geekster.Blogging_Platform_Backend_Api.Service.BloggerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class BloggerController {
@@ -45,14 +42,145 @@ public class BloggerController {
   }
 
   @PostMapping("follow")
-  public String followBlogger(@RequestParam Integer followId, @RequestParam String followerEmail, @RequestParam String followerToken)
+  public String followBlogger(@RequestParam String followerEmail, @RequestParam String followerToken,@RequestParam String followBlogger)
   {
     if(authenticationService.authenticate(followerEmail,followerToken)) {
-      return bloggerService.followBlogger(followId,followerEmail);
+      return bloggerService.followBlogger(followBlogger,followerEmail);
+    }
+    else {
+      return "Not an Authenticated user activity!!!";
+    }
+  }
+  @PostMapping("comment/Blog")
+  public String blogComment(@RequestBody CommentInput commentInput,@RequestParam String followerEmail, @RequestParam String followerToken )
+  {
+    if(authenticationService.authenticate(followerEmail,followerToken)) {
+      return bloggerService.blogComment(commentInput,followerEmail);
+    }
+    else
+    {
+      return "Not an Authenticated user activity!!!";
+    }
+  }
+  @GetMapping("bloggers")
+  public List<BloggerInfo> getAllBloggers(@RequestParam String followerEmail, @RequestParam String followerToken){
+     if(authenticationService.authenticate(followerEmail,followerToken)) {
+        return bloggerService.getAllBloggers();
+    }
+   throw new IllegalStateException("Not a valid user");
+  }
+  @GetMapping("blogger/bloggerHandle")
+  public BloggerInfo getBlogger(@RequestParam String followerEmail, @RequestParam String followerToken,@RequestParam String bloggerHandle)
+  {
+    if(authenticationService.authenticate(followerEmail,followerToken)) {
+      return bloggerService.getBlogger(bloggerHandle);
+    }
+    throw new IllegalStateException("Not a valid user");
+  }
+  @GetMapping("blogs")
+  public List<BlogOutput> getAllBlogs(
+          @RequestParam(value= "pageNumber",defaultValue = "1",required = false)Integer PageNumber,
+          @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer PageSize
+          ) {return bloggerService.getAllBlogs(PageNumber,PageSize);}
+
+  //get all blogs of the bloggers whose blogs we are following
+  @GetMapping("following/bloggers/blogs")
+  public List<BlogOutput> getAllBloggersBlog(@RequestParam String followerEmail,
+                                             @RequestParam String followerToken,
+                                             @RequestParam(value= "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
+                                             @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer pageSize
+                                            )
+  {
+    if(authenticationService.authenticate(followerEmail,followerToken)) {
+      return bloggerService.getAllBloggersBlog(followerEmail,pageNumber,pageSize);
+    }
+    throw new IllegalStateException("Not a valid user");
+  }
+
+  // get all my blogs
+
+  @GetMapping("blogger/blogs")
+  public List<BlogOutput> getAllMyBlog(@RequestParam String followerEmail,@RequestParam String followerToken)
+  {
+    if(authenticationService.authenticate(followerEmail,followerToken)) {
+      return bloggerService.getAllMyBlog(followerEmail);
+    }
+    throw new IllegalStateException("Not a valid user");
+  }
+
+
+
+  //get all comments in a from single post = (pagination if u can)
+  @GetMapping("blog/{blogId}/comments")
+  public List<CommentOutput> getAllCommentsFromBlog(@RequestParam String followerEmail,@RequestParam String followerToken,
+                                                    @PathVariable Integer blogId,
+                                                    @RequestParam(value= "pageNumber",defaultValue = "1",required = false)
+                                                      Integer pageNumber,
+                                                    @RequestParam(value= "pageSize",defaultValue = "5",required = false)
+                                                      Integer PageSize){
+    if(authenticationService.authenticate(followerEmail,followerToken)) {
+      return bloggerService.getAllCommentsFromBlog(blogId,pageNumber,PageSize);
+    }
+    throw new IllegalStateException("Not a valid user");
+  }
+
+
+
+
+  //Update A Blog Only the blog owner can do it
+  @PutMapping("/blog/{blogId}")
+  public String updateBlogWithBlogId(@RequestParam String followerEmail,@RequestParam String followerToken,
+                                     @PathVariable Integer blogId,@RequestParam String blogUpdateContent)
+  {
+    if(authenticationService.authenticate(followerEmail,followerToken)) {
+      return bloggerService.updateBlogWithBlogId(blogId,followerEmail,blogUpdateContent);
+    }
+    else
+      return "Not a Valid user";
+  }
+
+
+  //Delete Session signOutUser
+  @DeleteMapping("blogger/signOut")
+  public String sigOutBlogger(String email, String token)
+  {
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.sigOutBlogger(email);
+    }
+    else {
+      return "Sign out not allowed for non authenticated Blogger.";
+    }
+  }
+
+
+
+  //Delete a Comment the BlogOwner and commentOwner both
+    @DeleteMapping("comment")
+    public String removeBlogComment(@RequestParam Integer commentId, @RequestParam String email, @RequestParam String token)
+    {
+      if(authenticationService.authenticate(email,token)) {
+        return bloggerService.removeBlogComment(commentId,email);
+      }
+      else {
+        return "Not an Authenticated user activity!!!";
+      }
+    }
+
+
+    //Delete a Blog only a user can delete it
+
+  @DeleteMapping("Blog/{blogId}")
+  public String removeBlog( @RequestParam String email, @RequestParam String token,@PathVariable Integer blogId)
+  {
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.removeBlog(blogId,email);
     }
     else {
       return "Not an Authenticated user activity!!!";
     }
   }
 
+
 }
+
+

@@ -34,4 +34,12 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "fk_commenter_id")
     private Blogger commenter;
+
+    public Comment(String commentBody,Blog blogPost,Blogger commenter)
+    {
+        this.commentBody = commentBody;
+        this.blogPost = blogPost;
+        this.commenter = commenter;
+        this.commentCreationTimeStamp = LocalDateTime.now();
+    }
 }
