@@ -11,3 +11,8 @@ public class BloggingPlatformBackendApiApplication {
 	}
 
 }
+
+/*
+	Create a Blogging platform that allows users to
+create, read, update, and delete posts and comments.
+		Users can also search for posts and follow other users.*/
