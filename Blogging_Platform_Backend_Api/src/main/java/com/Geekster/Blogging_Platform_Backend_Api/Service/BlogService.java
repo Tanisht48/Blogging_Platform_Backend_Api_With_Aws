@@ -99,4 +99,18 @@ public class BlogService {
 
         return "Blog removed";
     }
+
+    public String createBlogPosts(List<BlogInput> blogInputs, Blogger blogOwner) {
+
+        List<Blog>blogs = new ArrayList<>();
+        for(BlogInput b : blogInputs) {
+            Blog blog = new Blog(b.getBlogType(), b.getBlogContentType(), b.getBlogContent(), blogOwner);
+            blog.setBlogCreatedTimeStamp(LocalDateTime.now());
+            blogs.add(blog);
+        }
+
+        blogRepo.saveAll(blogs);
+
+        return "Blogs Created !!!";
+    }
 }

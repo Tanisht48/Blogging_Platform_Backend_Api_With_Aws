@@ -7,11 +7,13 @@ import com.Geekster.Blogging_Platform_Backend_Api.Service.AuthenticationService;
 import com.Geekster.Blogging_Platform_Backend_Api.Service.BloggerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 public class BloggerController {
 
   @Autowired
@@ -31,7 +33,7 @@ public class BloggerController {
     }
 
   @PostMapping("blog")
-  public String createInstaPost(@RequestBody BlogInput blog, @RequestParam String email, @RequestParam String token)
+  public String createInstaPost(@RequestBody @Valid BlogInput blog, @RequestParam String email, @RequestParam String token)
   {
     if(authenticationService.authenticate(email,token)) {
       return bloggerService.createBlogPost(blog,email);
@@ -40,8 +42,17 @@ public class BloggerController {
       return "Not an Authenticated user activity!!!";
     }
   }
+  @PostMapping("blogs")
+  public String createInstaPost(@RequestBody @Valid List<BlogInput> blogs, @RequestParam String email, @RequestParam String token) {
+    if (authenticationService.authenticate(email, token)) {
+      return bloggerService.createBlogPosts(blogs, email);
+    } else {
+      return "Not an Authenticated user activity!!!";
+    }
+  }
 
-  @PostMapping("follow")
+
+    @PostMapping("follow")
   public String followBlogger(@RequestParam String followerEmail, @RequestParam String followerToken,@RequestParam String followBlogger)
   {
     if(authenticationService.authenticate(followerEmail,followerToken)) {

@@ -297,4 +297,11 @@ public class BloggerService {
        else
            return "Blog Does Not Exist";
     }
+
+    public String createBlogPosts(List<BlogInput> blogs, String email) {
+        Blogger blogOwner = bloggerRepo.findFirstByBloggerEmail(email);
+
+        blogOwner.setBlogCount(blogOwner.getBlogCount()==null?blogs.size():blogOwner.getBlogCount()+blogs.size());
+        return blogService.createBlogPosts(blogs,blogOwner);
+    }
 }
