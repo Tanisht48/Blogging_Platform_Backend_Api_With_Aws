@@ -96,6 +96,14 @@ public class BloggerController {
           @RequestParam(value= "pageNumber",defaultValue = "1",required = false)Integer PageNumber,
           @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer PageSize
           ) {return bloggerService.getAllBlogs(PageNumber,PageSize);}
+  @GetMapping("/MyProfile")
+  public BloggerInfo getMyProfile(@RequestParam String email, @RequestParam String token)
+  {
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.getMyProfile(email);
+    }
+    throw new IllegalStateException("Not a valid user");
+  }
 
   //get all blogs of the bloggers whose blogs we are following
   @GetMapping("following/bloggers/blogs")

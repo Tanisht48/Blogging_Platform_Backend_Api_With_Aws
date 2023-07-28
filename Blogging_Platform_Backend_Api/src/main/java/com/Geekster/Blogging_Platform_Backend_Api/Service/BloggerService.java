@@ -309,4 +309,9 @@ public class BloggerService {
     }
 
 
+    public BloggerInfo getMyProfile(String email) {
+        Blogger blogger = bloggerRepo.findFirstByBloggerEmail(email);
+        return new BloggerInfo(blogger.getBloggerHandle(),blogger.getBloggerBio(),
+                blogger.getFollowerCount(),blogger.getFollowingCount(),blogger.getBlogCount());
+    }
 }
