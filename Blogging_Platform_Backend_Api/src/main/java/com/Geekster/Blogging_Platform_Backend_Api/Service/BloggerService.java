@@ -204,7 +204,7 @@ public class BloggerService {
     public List<BlogOutput> getAllBloggersBlog(String followerEmail,Integer pageNumber,Integer pageSize) {
         Blogger blogger = bloggerRepo.findFirstByBloggerEmail(followerEmail);
         Pageable p = PageRequest.of(pageNumber,pageSize);
-        Page<Follow> pageFollow = followService.getAllBloggersFollowings(blogger.getBloggerId(),p);
+        Page<Follow> pageFollow = followService.getAllBloggersFollowings(blogger,p);
         List<Follow> following = pageFollow.getContent();
         List<Integer>followingIds = new ArrayList<>();
         for(Follow follow : following)

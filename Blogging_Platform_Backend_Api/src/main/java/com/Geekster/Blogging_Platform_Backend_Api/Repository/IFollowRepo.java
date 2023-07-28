@@ -11,5 +11,5 @@ import java.util.List;
 public interface IFollowRepo extends JpaRepository<Follow,Integer> {
     List<Follow> findByCurrentBloggerFollower(Blogger blogger);
 
-    Page<Follow> findByCurrentBloggerFollowerBloggerId(Integer bloggerId, Pageable p);
+    Page<Follow> findByCurrentBloggerFollower(Blogger blogger, Pageable p);
 }

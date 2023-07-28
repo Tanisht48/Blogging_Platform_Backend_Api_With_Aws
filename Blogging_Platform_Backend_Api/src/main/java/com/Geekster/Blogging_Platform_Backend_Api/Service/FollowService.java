@@ -24,7 +24,7 @@ public class FollowService {
         return followRepo.findByCurrentBloggerFollower(blogger);
     }
 
-    public Page<Follow> getAllBloggersFollowings(Integer bloggerId, Pageable p) {
-        return followRepo.findByCurrentBloggerFollowerBloggerId(bloggerId,p);
+    public Page<Follow> getAllBloggersFollowings(Blogger blogger, Pageable p) {
+        return followRepo.findByCurrentBloggerFollower(blogger,p);
     }
 }

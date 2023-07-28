@@ -106,22 +106,22 @@ public class BloggerController {
   }
 
   //get all blogs of the bloggers whose blogs we are following
-  @GetMapping("following/bloggers/blogs")
-  public List<BlogOutput> getAllBloggersBlog(@RequestParam String followerEmail,
-                                             @RequestParam String followerToken,
-                                             @RequestParam(value= "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
-                                             @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer pageSize
-                                            )
-  {
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
-      return bloggerService.getAllBloggersBlog(followerEmail,pageNumber,pageSize);
-    }
-    throw new IllegalStateException("Not a valid user");
-  }
+//  @GetMapping("following/bloggers/blogs")
+//  public List<BlogOutput> getAllBloggersBlog(@RequestParam String followerEmail,
+//                                             @RequestParam String followerToken,
+//                                             @RequestParam(value= "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
+//                                             @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer pageSize
+//                                            )
+//  {
+//    if(authenticationService.authenticate(followerEmail,followerToken)) {
+//      return bloggerService.getAllBloggersBlog(followerEmail,pageNumber,pageSize);
+//    }
+//    throw new IllegalStateException("Not a valid user");
+//  }
 
   // get all my blogs
 
-  @GetMapping("blogger/blogs")
+  @GetMapping("My/blogs")
   public List<BlogOutput> getAllMyBlog(@RequestParam String followerEmail,@RequestParam String followerToken)
   {
     if(authenticationService.authenticate(followerEmail,followerToken)) {
