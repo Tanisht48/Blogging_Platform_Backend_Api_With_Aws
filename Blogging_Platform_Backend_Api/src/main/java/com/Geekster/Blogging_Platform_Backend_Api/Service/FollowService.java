@@ -14,11 +14,7 @@ import java.util.List;
 public class FollowService {
     @Autowired
     private IFollowRepo followRepo;
-    public String followBlogger(Blogger followerBlogger, Blogger followingBlogger) {
-        Follow follow  = new Follow(followingBlogger,followerBlogger);
-        followRepo.save(follow);
-       return "You Have Started following "+followingBlogger.getBloggerHandle() ;
-    }
+
 
     public List<Follow> getAllBloggersFollowing(Blogger blogger) {
         return followRepo.findByCurrentBloggerFollower(blogger);
@@ -26,5 +22,16 @@ public class FollowService {
 
     public Page<Follow> getAllBloggersFollowings(Blogger blogger, Pageable p) {
         return followRepo.findByCurrentBloggerFollower(blogger,p);
+    }
+
+    public boolean isFollowAllowed(Blogger followTargetBlogger, Blogger follower) {
+        List<Follow> followList =  followRepo.findByCurrentBloggerAndCurrentBloggerFollower(followTargetBlogger,follower);
+
+        return followList!=null && followList.isEmpty() && !followTargetBlogger.equals(follower);
+    }
+
+    public void startFollowing(Blogger followTargetBlogger, Blogger follower) {
+        Follow follow  = new Follow(followTargetBlogger,follower);
+        followRepo.save(follow);
     }
 }

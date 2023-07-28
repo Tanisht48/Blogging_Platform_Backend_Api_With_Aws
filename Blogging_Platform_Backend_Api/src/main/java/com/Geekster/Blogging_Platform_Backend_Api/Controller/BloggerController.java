@@ -53,20 +53,20 @@ public class BloggerController {
 
 
     @PostMapping("follow")
-  public String followBlogger(@RequestParam String followerEmail, @RequestParam String followerToken,@RequestParam String followBlogger)
+  public String followBlogger(@RequestParam String email, @RequestParam String token,@RequestParam String followBlogger)
   {
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
-      return bloggerService.followBlogger(followBlogger,followerEmail);
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.followBlogger(followBlogger,email);
     }
     else {
       return "Not an Authenticated user activity!!!";
     }
   }
   @PostMapping("comment/Blog")
-  public String blogComment(@RequestBody CommentInput commentInput,@RequestParam String followerEmail, @RequestParam String followerToken )
+  public String blogComment(@RequestBody CommentInput commentInput,@RequestParam String email, @RequestParam String token )
   {
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
-      return bloggerService.blogComment(commentInput,followerEmail);
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.blogComment(commentInput,email);
     }
     else
     {
@@ -84,9 +84,9 @@ public class BloggerController {
    throw new IllegalStateException("Not a valid user");
   }
   @GetMapping("blogger/bloggerHandle")
-  public BloggerInfo getBlogger(@RequestParam String followerEmail, @RequestParam String followerToken,@RequestParam String bloggerHandle)
+  public BloggerInfo getBlogger(@RequestParam String email, @RequestParam String token,@RequestParam String bloggerHandle)
   {
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
+    if(authenticationService.authenticate(email,token)) {
       return bloggerService.getBlogger(bloggerHandle);
     }
     throw new IllegalStateException("Not a valid user");
@@ -105,27 +105,15 @@ public class BloggerController {
     throw new IllegalStateException("Not a valid user");
   }
 
-  //get all blogs of the bloggers whose blogs we are following
-//  @GetMapping("following/bloggers/blogs")
-//  public List<BlogOutput> getAllBloggersBlog(@RequestParam String followerEmail,
-//                                             @RequestParam String followerToken,
-//                                             @RequestParam(value= "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
-//                                             @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer pageSize
-//                                            )
-//  {
-//    if(authenticationService.authenticate(followerEmail,followerToken)) {
-//      return bloggerService.getAllBloggersBlog(followerEmail,pageNumber,pageSize);
-//    }
-//    throw new IllegalStateException("Not a valid user");
-//  }
+
 
   // get all my blogs
 
-  @GetMapping("My/blogs")
-  public List<BlogOutput> getAllMyBlog(@RequestParam String followerEmail,@RequestParam String followerToken)
+  @GetMapping("myBlogs")
+  public List<BlogOutput> getAllMyBlog(@RequestParam String email,@RequestParam String token)
   {
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
-      return bloggerService.getAllMyBlog(followerEmail);
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.getAllMyBlog(email);
     }
     throw new IllegalStateException("Not a valid user");
   }
@@ -134,13 +122,13 @@ public class BloggerController {
 
   //get all comments in a from single post = (pagination if u can)
   @GetMapping("blog/{blogId}/comments")
-  public List<CommentOutput> getAllCommentsFromBlog(@RequestParam String followerEmail,@RequestParam String followerToken,
+  public List<CommentOutput> getAllCommentsFromBlog(@RequestParam String email,@RequestParam String token,
                                                     @PathVariable Integer blogId,
                                                     @RequestParam(value= "pageNumber",defaultValue = "1",required = false)
                                                       Integer pageNumber,
                                                     @RequestParam(value= "pageSize",defaultValue = "5",required = false)
                                                       Integer PageSize){
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
+    if(authenticationService.authenticate(email,token)) {
       return bloggerService.getAllCommentsFromBlog(blogId,pageNumber,PageSize);
     }
     throw new IllegalStateException("Not a valid user");
@@ -151,11 +139,11 @@ public class BloggerController {
 
   //Update A Blog Only the blog owner can do it
   @PutMapping("/blog/{blogId}")
-  public String updateBlogWithBlogId(@RequestParam String followerEmail,@RequestParam String followerToken,
+  public String updateBlogWithBlogId(@RequestParam String email,@RequestParam String token,
                                      @PathVariable Integer blogId,@RequestParam String blogUpdateContent)
   {
-    if(authenticationService.authenticate(followerEmail,followerToken)) {
-      return bloggerService.updateBlogWithBlogId(blogId,followerEmail,blogUpdateContent);
+    if(authenticationService.authenticate(email,token)) {
+      return bloggerService.updateBlogWithBlogId(blogId,email,blogUpdateContent);
     }
     else
       return "Not a Valid user";

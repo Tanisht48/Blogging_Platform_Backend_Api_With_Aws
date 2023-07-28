@@ -12,4 +12,8 @@ public interface IFollowRepo extends JpaRepository<Follow,Integer> {
     List<Follow> findByCurrentBloggerFollower(Blogger blogger);
 
     Page<Follow> findByCurrentBloggerFollower(Blogger blogger, Pageable p);
+
+    Page<Follow> findByCurrentBlogger(Blogger blogger, Pageable p);
+
+    List<Follow> findByCurrentBloggerAndCurrentBloggerFollower(Blogger followTargetBlogger, Blogger follower);
 }

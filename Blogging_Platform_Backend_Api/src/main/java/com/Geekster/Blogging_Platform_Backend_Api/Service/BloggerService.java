@@ -134,20 +134,30 @@ public class BloggerService {
     }
 
     public String followBlogger(String followingHandle, String followerEmail) {
-            Blogger followingBlogger = bloggerRepo.findFirstByBloggerHandle(followingHandle);
-            Blogger followerBlogger = bloggerRepo.findFirstByBloggerEmail(followerEmail);
-            if(followingBlogger!=null)
+        Blogger followTargetBlogger = bloggerRepo.findFirstByBloggerHandle(followingHandle);
+
+        Blogger follower = bloggerRepo.findFirstByBloggerEmail(followerEmail);
+
+        if(followTargetBlogger!=null)
+        {
+            if(followService.isFollowAllowed(followTargetBlogger,follower))
             {
-                followingBlogger.setFollowerCount((followerBlogger.getFollowerCount()==null)?1:followerBlogger.getFollowerCount()+1);
-                followerBlogger.setFollowingCount((followingBlogger.getFollowingCount()==null)?1:followingBlogger.getFollowingCount()+1);
-                bloggerRepo.save(followerBlogger);
-                bloggerRepo.save(followingBlogger);
-                return followService.followBlogger(followerBlogger,followingBlogger);
+                followService.startFollowing(followTargetBlogger,follower);
+                Integer newFollowingCount = (follower.getFollowingCount()==null)?1:follower.getFollowingCount()+1;
+                follower.setFollowingCount(newFollowingCount);
+                Integer newFollowerCount = (followTargetBlogger.getFollowerCount()==null)?1:followTargetBlogger.getFollowerCount()+1;
+                followTargetBlogger.setFollowerCount(newFollowerCount);
+                bloggerRepo.save(follower);
+                bloggerRepo.save(followTargetBlogger);
+                return follower.getBloggerHandle()  + " is now following " + followTargetBlogger.getBloggerHandle();
             }
-            else
-            {
-                return "Blogger you are trying to follow does not Exist";
+            else {
+                return follower.getBloggerHandle()  + " already follows " + followTargetBlogger.getBloggerHandle();
             }
+        }
+        else {
+            return "User to be followed is Invalid!!!";
+        }
 
 
     }

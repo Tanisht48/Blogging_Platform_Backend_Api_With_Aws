@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface IBloggerRepo extends JpaRepository<Blogger,Integer> {
     Blogger findFirstByBloggerEmail(String newEmail);
 
-    Blogger findFirstByBloggerHandle(String followingHandle);
+   Blogger findFirstByBloggerHandle(String followingHandle);
 
 
     Page<Blogger> findByBloggerIdNot(Integer bloggerId, Pageable p);
