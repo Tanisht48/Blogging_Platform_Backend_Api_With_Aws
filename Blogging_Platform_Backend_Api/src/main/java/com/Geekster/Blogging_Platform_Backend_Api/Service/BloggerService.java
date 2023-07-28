@@ -167,8 +167,11 @@ public class BloggerService {
         }
     }
 
-    public List<BloggerInfo> getAllBloggers() {
-        List<Blogger> bloggerList = bloggerRepo.findAll();
+    public List<BloggerInfo> getAllBloggers(String email,Integer pageNumber,Integer pageSize) {
+        Blogger me = bloggerRepo.findFirstByBloggerEmail(email);
+         Pageable p = PageRequest.of(pageNumber,pageSize);
+         Page<Blogger>bloggerPage = bloggerRepo.findByBloggerIdNot(me.getBloggerId(),p);
+        List<Blogger> bloggerList = bloggerPage.getContent();
 
         List<BloggerInfo> bloggerInfoList = new ArrayList<>();
 
@@ -304,4 +307,6 @@ public class BloggerService {
         blogOwner.setBlogCount(blogOwner.getBlogCount()==null?blogs.size():blogOwner.getBlogCount()+blogs.size());
         return blogService.createBlogPosts(blogs,blogOwner);
     }
+
+
 }

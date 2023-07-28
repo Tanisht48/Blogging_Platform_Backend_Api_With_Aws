@@ -74,9 +74,12 @@ public class BloggerController {
     }
   }
   @GetMapping("bloggers")
-  public List<BloggerInfo> getAllBloggers(@RequestParam String followerEmail, @RequestParam String followerToken){
-     if(authenticationService.authenticate(followerEmail,followerToken)) {
-        return bloggerService.getAllBloggers();
+  public List<BloggerInfo> getAllBloggers(@RequestParam String Email, @RequestParam String Token,
+                                          @RequestParam(value= "pageNumber",defaultValue = "1",required = false)Integer pageNumber,
+                                          @RequestParam(value= "pageSize",defaultValue = "5",required = false)Integer pageSize
+                                          ){
+     if(authenticationService.authenticate(Email,Token)) {
+        return bloggerService.getAllBloggers(Email,pageNumber,pageSize);
     }
    throw new IllegalStateException("Not a valid user");
   }
