@@ -31,7 +31,6 @@ Blogging Platform is a backend project that aims to provide a robust and scalabl
 ## Dependencies
 The following dependencies are required to run the project:
 
-* Spring Boot Dev Tools
 * Spring Web
 * Spring Data JPA
 * MySQL Driver
